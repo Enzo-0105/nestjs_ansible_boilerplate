@@ -1,3 +1,4 @@
+---
 - name: Configure NestJS Boilerplate
   hosts: hng
   become: yes
@@ -246,20 +247,19 @@
         group: "{{ app_user }}"
         mode: '0755'
 
-    - name: starting application
+    - name: Start application
       become: yes
       become_user: "{{ app_user }}"
       shell: |
-        cd hng_boilerplate_nestjs
-        npm install 
-        npm run dev
+        cd {{ app_dir }}
+        npm install
+        nohup npm run start > /var/log/stage_5b/out.log 2> /var/log/stage_5b/error.log &
       args:
         executable: /bin/bash
 
     - name: Configure logging for application
       shell: |
-        source "$HOME/.nvm/nvm.sh"
-        npm start {{ app_dir }}/dist/main.js --name nest_app --log /var/log/stage_5b/out.log --error /var/log/stage_5b/error.log
+        echo "Logs for the application are being saved in /var/log/stage_5b/out.log and /var/log/stage_5b/error.log"
       become: yes
       become_user: "{{ app_user }}"
       args:
