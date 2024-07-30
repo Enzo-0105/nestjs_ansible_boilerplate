@@ -246,20 +246,20 @@
         group: "{{ app_user }}"
         mode: '0755'
 
-    - name: Install PM2 globally using nvm
+    - name: starting application
       become: yes
       become_user: "{{ app_user }}"
       shell: |
-        source "$HOME/.nvm/nvm.sh"
-        npm install -g pm2
+        cd hng_boilerplate_nestjs
+        npm install 
+        npm run dev
       args:
         executable: /bin/bash
 
     - name: Configure logging for application
       shell: |
         source "$HOME/.nvm/nvm.sh"
-        pm2 start {{ app_dir }}/dist/main.js --name nest_app --log /var/log/stage_5b/out.log --error /var/log/stage_5b/error.log
-        pm2 save
+        npm start {{ app_dir }}/dist/main.js --name nest_app --log /var/log/stage_5b/out.log --error /var/log/stage_5b/error.log
       become: yes
       become_user: "{{ app_user }}"
       args:
